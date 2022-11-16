@@ -27,9 +27,15 @@ form button {
 	padding: 12px;
 }
 
+
 form button[type='button'] {
 	background-color: rgb(225, 225, 225);
 }
+
+form button:hover {
+	cursor: pointer;
+	color: red;
+  }
 
 .input{
 	width: 500px;
@@ -78,7 +84,7 @@ img {
 
 .close-icon {
 	position: absolute;
-	bottom: 10;
+	bottom: 15;
 	left: 0;
 	font-size: 20px;
   }

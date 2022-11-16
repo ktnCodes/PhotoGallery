@@ -6,6 +6,11 @@ This is the Source code using ASW Amplify Authentication with react/node photo g
 
 You'll need to create a cloudinary account https://cloudinary.com/users/register/free - there is a free tier.
 
+
+## Setting up AWS-amplify
+
+You'll need...
+
 ## Start the server
 
 - Clone the repo

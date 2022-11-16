@@ -11,7 +11,7 @@ function App({signOut, user }) {
   const [images, setImages] = useState([]);
   const [imageToRemove, setImageToRemove] = useState(null);
 
-
+//remove image logic with button "currently doesnt work but assignment does spep"
   function handleRemoveImg(imgObj) {
     setImageToRemove(imgObj.public_id);
     axios.delete(`http://localhost:8080/${imgObj.public_id}`)
@@ -22,6 +22,7 @@ function App({signOut, user }) {
          .catch((e) => console.log(e));
   }
 
+  //upload image widget
   function handleOpenWidget() { 
     var myWidget = window.cloudinary.createUploadWidget(
       {

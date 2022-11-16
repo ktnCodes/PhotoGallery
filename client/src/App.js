@@ -51,7 +51,6 @@ function App({signOut, user }) {
     myWidget.open();
   }
 
-  //name of the images on top
   function handleText(event){
     const newText = event.target.value
     setText(newText)
@@ -104,7 +103,7 @@ function App({signOut, user }) {
           required='required'
           placeholder='Enter a search value...'></input>
           <button type='submit'>Search</button>
-          <button type='button' onClick={resetForm}>Clear</button>
+          <button type='button' onClick={resetForm}>Refresh Page</button>
           </div>
           </form>
           <button type='uploadButton' onClick={() => handleOpenWidget()}>Upload</button>
@@ -114,8 +113,9 @@ function App({signOut, user }) {
       <div className='image-grid'>
         {imageList.map((image) => (
           <div className='image-preview'>
+            <input type="text" className="input" onChange={handleText} value={image.public_id}/>
           <img src={image.url} alt={image.public_id}></img>
-          {imageToRemove != image.public_id && <i className="fa fa-times-circle close-icon" onClick={() => handleRemoveImg(image)}></i>}
+            {imageToRemove != image.public_id && <i className="fa fa-times-circle close-icon" onClick={() => handleRemoveImg(image)}></i>}
           </div>
       ))}
       

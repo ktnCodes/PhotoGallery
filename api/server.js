@@ -7,6 +7,8 @@ const cloudinary = require("cloudinary");
 
 const app = express();
 
+require("dotenv").config();
+
 app.use(cors());
 app.use(json());
 
@@ -47,7 +49,7 @@ app.get('/search', async (req, res) => {
 });
 
 app.use(cors());
-app.delete("/:public_id", async (req, res) => {
+app.delete("/public_id", async (req, res) => {
     const { public_id } = req.params;
     try {
         await cloudinary.uploader.destroy(public_id);

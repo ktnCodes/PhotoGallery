@@ -31,6 +31,18 @@ form button[type='button'] {
 	background-color: rgb(225, 225, 225);
 }
 
+.input{
+	width: 500px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	border-radius: 5px;
+}
+
+.image-text {
+	position: absolute;
+
+}
+
 img {
 	width: 100%;
 	height: 100%;

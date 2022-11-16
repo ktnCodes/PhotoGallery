@@ -7,6 +7,8 @@ const cloudinary = require("cloudinary");
 
 const app = express();
 
+require("dotenv").config();
+
 app.use(cors());
 app.use(json());
 

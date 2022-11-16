@@ -8,13 +8,14 @@ function App({signOut, user }) {
   const [imageList, setImageList] = useState([]);
   const [nextCursor, setNextCursor] = useState(null);
   const [searchValue, setSearchValue] = useState('');
+  const [text, setText] = React.useState("");
   const [images, setImages] = useState([]);
   const [imageToRemove, setImageToRemove] = useState(null);
 
 //remove image logic with button "currently doesnt work but assignment does spep"
   function handleRemoveImg(imgObj) {
     setImageToRemove(imgObj.public_id);
-    axios.delete(`http://localhost:8080/${imgObj.public_id}`)
+    axios.delete(`http://localhost:7000/${imgObj.public_id}`)
          .then(() => {
               setImageToRemove(null);
               setImages((prev) => prev.filter((img) => img.public_id !== imgObj.public_id));
@@ -28,11 +29,22 @@ function App({signOut, user }) {
       {
         cloudName: 'dqomn2sdv', 
         uploadPreset: 'bpiofvtp',
+        sources: [
+          "local",
+          "url",
+          "unsplash"
+        ],
+        googleApiKey: "<image_search_google_api_key>",
+        showAdvancedOptions: true,
+        cropping: false,
+        multiple: true,
+        defaultSource: "local",
       },
       (error, result) => { 
           if (!error && result && result.event === "success") { 
+              alert(result.info.secure_url);
+              console.log('Done! Here is the image info: ', result.info)
               setImages((prev) => [...prev, {url: result.info.url, public_id: result.info.public_id}])
-              window.location.reload(false);
           }
         }
     );
@@ -40,24 +52,11 @@ function App({signOut, user }) {
     myWidget.open();
   }
 
-  // //parameters for uploaded pictures
-  // cloudinary.openUploadWidget({
-  //   upload_preset: "preset1",
-  //   cloud_name: "demo",
-  //   prepareUploadParams: (cb, params) => {
-  //     params = [].concat(params);  //params can be a single object or an array of objects
-  //     Promise.all(params.map((req) =>
-  //       makeAjaxRequest("https://mysite.example.com/prepare", req)
-  //         .then((response) => Object.assign({
-  //           signature: response.signature,
-  //           apiKey: response.api_key,
-  //         }, response.upload_params))
-  //     ))
-  //       .then((results) =>
-  //         cb(results.length === 1 ? results[0] : results));
-  //   }
-  // }, (error, result) => { });
-
+  //name of the images on top
+  function handleText(event){
+    const newText = event.target.value
+    setText(newText)
+  }
 
   useEffect(() => {
       const fetchData = async() => {
@@ -111,11 +110,16 @@ function App({signOut, user }) {
           </form>
           <button type='uploadButton' onClick={() => handleOpenWidget()}>Upload</button>
       
+
+      {/*image logic*/}
       <div className='image-grid'>
         {imageList.map((image) => (
           <div className='image-preview'>
-          <img src={image.url} alt={image.public_id}></img>
-          {imageToRemove != image.public_id && <i className="fa fa-times-circle close-icon" onClick={() => handleRemoveImg(image)}></i>}
+            <input type="text" placeholder="Rename Image Here" className="input" onChange={handleText}
+              value={image.public_id}/>
+            <img src={image.url} alt={image.public_id}></img>
+              {/* <h1 className='image-text'>[image.public_id]</h1> */}
+          {/*imageToRemove != image.public_id && <i className="fa fa-times-circle close-icon" onClick={() => handleRemoveImg(image)}></i>*/}
           </div>
       ))}
       

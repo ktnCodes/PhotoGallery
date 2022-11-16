@@ -32,12 +32,32 @@ function App({signOut, user }) {
       (error, result) => { 
           if (!error && result && result.event === "success") { 
               setImages((prev) => [...prev, {url: result.info.url, public_id: result.info.public_id}])
+              window.location.reload(false);
           }
         }
     );
     //open upload widget
     myWidget.open();
   }
+
+  // //parameters for uploaded pictures
+  // cloudinary.openUploadWidget({
+  //   upload_preset: "preset1",
+  //   cloud_name: "demo",
+  //   prepareUploadParams: (cb, params) => {
+  //     params = [].concat(params);  //params can be a single object or an array of objects
+  //     Promise.all(params.map((req) =>
+  //       makeAjaxRequest("https://mysite.example.com/prepare", req)
+  //         .then((response) => Object.assign({
+  //           signature: response.signature,
+  //           apiKey: response.api_key,
+  //         }, response.upload_params))
+  //     ))
+  //       .then((results) =>
+  //         cb(results.length === 1 ? results[0] : results));
+  //   }
+  // }, (error, result) => { });
+
 
   useEffect(() => {
       const fetchData = async() => {

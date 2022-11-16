@@ -15,8 +15,7 @@ function App({signOut, user }) {
 //remove image logic with button "currently doesnt work but assignment does spep"
   function handleRemoveImg(imgObj) {
     setImageToRemove(imgObj.public_id);
-    axios
-         .delete(`http://localhost:7000/${imgObj.public_id}`)
+    axios.delete(`http://localhost:7000/${imgObj.public_id}`)
          .then(() => {
               setImageToRemove(null);
               setImages((prev) => prev.filter((img) => img.public_id !== imgObj.public_id));
@@ -115,9 +114,8 @@ function App({signOut, user }) {
       <div className='image-grid'>
         {imageList.map((image) => (
           <div className='image-preview'>
-            <input type="text" className="input" onChange={handleText} value={image.public_id}/>
-            <img src={image.url} alt={image.public_id}></img>
-              {imageToRemove != image.public_id && <i className="fa fa-times-circle close-icon" onClick={() => handleRemoveImg(image)}></i>}
+          <img src={image.url} alt={image.public_id}></img>
+          {imageToRemove != image.public_id && <i className="fa fa-times-circle close-icon" onClick={() => handleRemoveImg(image)}></i>}
           </div>
       ))}
       

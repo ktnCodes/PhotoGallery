@@ -5,7 +5,7 @@
 *.zip
 *.log
 *.logs
-# .env
+.env
 *error.log*
 *debug.log*
 

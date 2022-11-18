@@ -6,21 +6,27 @@ This is the Source code using ASW Amplify Authentication with react/node photo g
 
 You'll need to create a cloudinary account https://cloudinary.com/users/register/free - there is a free tier.
 
+This will allow you to create your own backend photo storage on the cloud.
 
 ## Setting up AWS-amplify
 
-You'll need...
-
-## Start the server
-
 - Clone the repo
-- In the `api` folder, create a new file called `.env`. In here, add your cloudinary connection details e.g:
+
+- You'll need to run this command in the client folder to make sure amplify is installed:
+
+```
+npm i aws-amplify @aws-amplify/ui-react
 
 ```
 
-API_KEY={YOUR_API_KEY}
-CLOUD_NAME={YOUR_CLOUD_NAME}
-API_SECRET={YOUR_API_SECRET}
+## Start the server
+
+- In the `api` folder, create a new file called `.env`. In here, add your cloudinary connection details e.g:
+
+```
+CLOUD_NAME=YOUR_CLOUD_NAME
+API_KEY=YOUR_API_KEY
+API_SECRET=YOUR_API_SECRET
 
 ```
 

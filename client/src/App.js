@@ -1,10 +1,9 @@
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import React, { useEffect, useState } from 'react';
-import {getImages, searchImages} from './api';
-import axios from "axios";
+import { getImages, searchImages } from './api';
 import './App.css';
 
-function App({signOut, user }) {
+function App({ signOut, user }) {
   const [imageList, setImageList] = useState([]);
   const [nextCursor, setNextCursor] = useState(null);
   const [searchValue, setSearchValue] = useState('');
@@ -12,22 +11,11 @@ function App({signOut, user }) {
   const [images, setImages] = useState([]);
   const [imageToRemove, setImageToRemove] = useState(null);
 
-//remove image logic with button "currently doesnt work but assignment does specify a delete functionality. So ignoring this for now"
-  function handleRemoveImg(imgObj) {
-    setImageToRemove(imgObj.public_id);
-    axios.delete(`http://localhost:7000/${imgObj.public_id}`)
-         .then(() => {
-              setImageToRemove(null);
-              setImages((prev) => prev.filter((img) => img.public_id !== imgObj.public_id));
-         })
-         .catch((e) => console.log(e));
-  }
-
-  //upload image widget
-  function handleOpenWidget() { 
+  //logic for upload image widget
+  function handleOpenWidget() {
     var myWidget = window.cloudinary.createUploadWidget(
       {
-        cloudName: 'dqomn2sdv', 
+        cloudName: 'dqomn2sdv',
         uploadPreset: 'bpiofvtp',
         sources: [
           "local",
@@ -40,88 +28,88 @@ function App({signOut, user }) {
         multiple: true,
         defaultSource: "local",
       },
-      (error, result) => { 
-          if (!error && result && result.event === "success") { 
-              alert(result.info.secure_url);
-              console.log('Done! Here is the image info: ', result.info)
-              setImages((prev) => [...prev, {url: result.info.url, public_id: result.info.public_id}])
-          }
+      (error, result) => {
+        if (!error && result && result.event === "success") {
+          alert(result.info.secure_url);
+          console.log('Done! Here is the image info: ', result.info)
+          setImages((prev) => [...prev, { url: result.info.url, public_id: result.info.public_id }])
         }
+      }
     );
     myWidget.open();
   }
 
-  function handleText(event){
+  //logic for title of image
+  function handleText(event) {
     const newText = event.target.value
     setText(newText)
   }
 
+  //logic for fetching images
   useEffect(() => {
-      const fetchData = async() => {
-          const responseJson = await getImages();
-          setImageList(responseJson.resources);
-          setNextCursor(responseJson.next_cursor);
-      };
+    const fetchData = async () => {
+      const responseJson = await getImages();
+      setImageList(responseJson.resources);
+      setNextCursor(responseJson.next_cursor);
+    };
 
-      fetchData();
+    fetchData();
   }, []);
 
   //logic for load more button
-  const handleLoadMoreButtonClick = async ()=> {
+  const handleLoadMoreButtonClick = async () => {
     const responseJson = await getImages(nextCursor);
-    setImageList((currentImageList)=> [...currentImageList,  ...responseJson.resources]);
+    setImageList((currentImageList) => [...currentImageList, ...responseJson.resources]);
     setNextCursor(responseJson.next_cursor);
   };
 
   //logic for search
   const handleFormSubmit = async (event) => {
-		event.preventDefault();
+    event.preventDefault();
 
-		const responseJson = await searchImages(searchValue, nextCursor);
-		setImageList(responseJson.resources);
-		setNextCursor(responseJson.next_cursor);
-	};
+    const responseJson = await searchImages(searchValue, nextCursor);
+    setImageList(responseJson.resources);
+    setNextCursor(responseJson.next_cursor);
+  };
 
-  //reset search value
-	const resetForm = async () => {
-		const responseJson = await getImages();
-		setImageList(responseJson.resources);
-		setNextCursor(responseJson.next_cursor);
+  //logic for reset search value
+  const resetForm = async () => {
+    const responseJson = await getImages();
+    setImageList(responseJson.resources);
+    setNextCursor(responseJson.next_cursor);
 
-		setSearchValue('');
-	};
+    setSearchValue('');
+  };
 
   return (
     <>
       <form onSubmit={handleFormSubmit}>
-      <div className="App">
+        <div className="App">
           {user.attributes.email}
           <button type='button' onClick={signOut}>SignOut</button>
-          <input 
-          value={searchValue}
-          onChange={(event)=> setSearchValue(event.target.value)}
-          required='required'
-          placeholder='Enter a search value...'></input>
+          <input
+            value={searchValue}
+            onChange={(event) => setSearchValue(event.target.value)}
+            required='required'
+            placeholder='Enter a search value...'></input>
           <button type='submit'>Search</button>
           <button type='button' onClick={resetForm}>Refresh Page</button>
-          </div>
-          </form>
-          <button type='uploadButton' onClick={() => handleOpenWidget()}>Upload</button>
-      
+        </div>
+      </form>
+      <button type='uploadButton' onClick={() => handleOpenWidget()}>Upload</button>
 
       {/*image logic*/}
       <div className='image-grid'>
         {imageList.map((image) => (
           <div className='image-preview'>
-            <input type="text" className="input" onChange={handleText} value={image.public_id}/>
-          <img src={image.url} alt={image.public_id}></img>
-            {imageToRemove != image.public_id && <i className="fa fa-times-circle close-icon" onClick={() => handleRemoveImg(image)}></i>}
+            <input type="text" className="input" onChange={handleText} value={image.public_id} />
+            <img src={image.url} alt={image.public_id}></img>
           </div>
-      ))}
-      
-    </div>
+        ))}
+
+      </div>
       <div className='footer'>
-          {nextCursor && <button onClick={handleLoadMoreButtonClick}>Load More</button>}
+        {nextCursor && <button onClick={handleLoadMoreButtonClick}>Load More</button>}
       </div>
     </>
   );

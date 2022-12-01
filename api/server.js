@@ -4,7 +4,6 @@ const cors = require('cors');
 const { json } = require('body-parser');
 const axios = require('axios');
 const cloudinary = require("cloudinary");
-
 const app = express();
 
 require("dotenv").config();
@@ -13,19 +12,11 @@ app.use(cors());
 app.use(json());
 
 const { parsed: config } = dotenv.config();
-
 const BASE_URL = `https://api.cloudinary.com/v1_1/${config.CLOUD_NAME}`;
-
 const auth = {
 	username: config.API_KEY,
 	password: config.API_SECRET,
 };
-
-cloudinary.config({
-    cloudname: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET,
-})
 
 app.get('/photos', async (req, res) => {
 	const response = await axios.get(BASE_URL + '/resources/image', {
@@ -46,17 +37,6 @@ app.get('/search', async (req, res) => {
 	});
 
 	return res.send(response.data);
-});
-
-app.use(cors());
-app.delete("/public_id", async (req, res) => {
-    const { public_id } = req.params;
-    try {
-        await cloudinary.uploader.destroy(public_id);
-        res.status(200).send();
-    }   catch (error) {
-        res.status(400).send();
-    }
 });
 
 const PORT = 7000;

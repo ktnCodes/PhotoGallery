@@ -8,8 +8,6 @@ function App({ signOut, user }) {
   const [nextCursor, setNextCursor] = useState(null);
   const [searchValue, setSearchValue] = useState('');
   const [text, setText] = React.useState("");
-  const [images, setImages] = useState([]);
-  const [imageToRemove, setImageToRemove] = useState(null);
 
   //logic for upload image widget
   function handleOpenWidget() {
@@ -27,15 +25,7 @@ function App({ signOut, user }) {
         cropping: false,
         multiple: true,
         defaultSource: "local",
-      },
-      (error, result) => {
-        if (!error && result && result.event === "success") {
-          alert(result.info.secure_url);
-          console.log('Done! Here is the image info: ', result.info)
-          setImages((prev) => [...prev, { url: result.info.url, public_id: result.info.public_id }])
-        }
-      }
-    );
+      });
     myWidget.open();
   }
 
@@ -52,7 +42,6 @@ function App({ signOut, user }) {
       setImageList(responseJson.resources);
       setNextCursor(responseJson.next_cursor);
     };
-
     fetchData();
   }, []);
 
@@ -66,7 +55,6 @@ function App({ signOut, user }) {
   //logic for search
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
     const responseJson = await searchImages(searchValue, nextCursor);
     setImageList(responseJson.resources);
     setNextCursor(responseJson.next_cursor);
@@ -77,7 +65,6 @@ function App({ signOut, user }) {
     const responseJson = await getImages();
     setImageList(responseJson.resources);
     setNextCursor(responseJson.next_cursor);
-
     setSearchValue('');
   };
 
@@ -87,18 +74,15 @@ function App({ signOut, user }) {
         <div className="App">
           {user.attributes.email}
           <button type='button' onClick={signOut}>SignOut</button>
-          <input
-            value={searchValue}
+          <input value={searchValue}
             onChange={(event) => setSearchValue(event.target.value)}
             required='required'
             placeholder='Enter a search value...'></input>
           <button type='submit'>Search</button>
-          <button type='button' onClick={resetForm}>Refresh Page</button>
+          <button type='button' onClick={resetForm}>Clear</button>
         </div>
       </form>
       <button type='uploadButton' onClick={() => handleOpenWidget()}>Upload</button>
-
-      {/*image logic*/}
       <div className='image-grid'>
         {imageList.map((image) => (
           <div className='image-preview'>
@@ -106,7 +90,6 @@ function App({ signOut, user }) {
             <img src={image.url} alt={image.public_id}></img>
           </div>
         ))}
-
       </div>
       <div className='footer'>
         {nextCursor && <button onClick={handleLoadMoreButtonClick}>Load More</button>}

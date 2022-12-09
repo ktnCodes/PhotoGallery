@@ -74,7 +74,9 @@ function App({ signOut, user }) {
         <div className="App">
           {user.attributes.email}
           <button type='button' onClick={signOut}>SignOut</button>
-          <input value={searchValue}
+          <input
+            data-testid="search"
+            value={searchValue}
             onChange={(event) => setSearchValue(event.target.value)}
             required='required'
             placeholder='Enter a search value...'></input>
@@ -86,7 +88,7 @@ function App({ signOut, user }) {
       <div className='image-grid'>
         {imageList.map((image) => (
           <div className='image-preview'>
-            <input type="text" className="input" onChange={handleText} value={image.public_id} />
+            <input type="text" data-testid="image" className="input" onChange={handleText} value={image.public_id} />
             <img src={image.url} alt={image.public_id}></img>
           </div>
         ))}

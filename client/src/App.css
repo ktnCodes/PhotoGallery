@@ -82,14 +82,3 @@ img {
 	margin: 3rem 0 3rem 0;
 }
 
-.close-icon {
-	position: absolute;
-	bottom: 15;
-	left: 0;
-	font-size: 20px;
-  }
-  
-.close-icon:hover {
-	cursor: pointer;
-	color: red;
-  }

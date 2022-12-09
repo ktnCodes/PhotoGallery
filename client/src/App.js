@@ -9,7 +9,17 @@ function App({ signOut, user }) {
   const [searchValue, setSearchValue] = useState('');
   const [text, setText] = React.useState("");
 
-  //logic for upload image widget
+  //logic for fetching images
+  useEffect(() => {
+    const fetchData = async () => {
+      const responseJson = await getImages();
+      setImageList(responseJson.resources);
+      setNextCursor(responseJson.next_cursor);
+    };
+    fetchData();
+  }, []);
+
+  //logic for upload image using API Cloudinary widget
   function handleOpenWidget() {
     var myWidget = window.cloudinary.createUploadWidget(
       {
@@ -30,30 +40,20 @@ function App({ signOut, user }) {
   }
 
   //logic for title of image
-  function handleText(event) {
+  function handleImageID(event) {
     const newText = event.target.value
     setText(newText)
   }
 
-  //logic for fetching images
-  useEffect(() => {
-    const fetchData = async () => {
-      const responseJson = await getImages();
-      setImageList(responseJson.resources);
-      setNextCursor(responseJson.next_cursor);
-    };
-    fetchData();
-  }, []);
-
   //logic for load more button
-  const handleLoadMoreButtonClick = async () => {
+  const handleLoadMore = async () => {
     const responseJson = await getImages(nextCursor);
     setImageList((currentImageList) => [...currentImageList, ...responseJson.resources]);
     setNextCursor(responseJson.next_cursor);
   };
 
   //logic for search
-  const handleFormSubmit = async (event) => {
+  const handleSearch = async (event) => {
     event.preventDefault();
     const responseJson = await searchImages(searchValue, nextCursor);
     setImageList(responseJson.resources);
@@ -61,7 +61,7 @@ function App({ signOut, user }) {
   };
 
   //logic for reset search value
-  const resetForm = async () => {
+  const resetSearch = async () => {
     const responseJson = await getImages();
     setImageList(responseJson.resources);
     setNextCursor(responseJson.next_cursor);
@@ -70,29 +70,31 @@ function App({ signOut, user }) {
 
   return (
     <>
-      <form onSubmit={handleFormSubmit}>
+      <form onSubmit={handleSearch}>
         <div className="App">
           {user.attributes.email}
           <button type='button' onClick={signOut}>SignOut</button>
-          <input value={searchValue}
+          <input
+            data-testid="search"
+            value={searchValue}
             onChange={(event) => setSearchValue(event.target.value)}
             required='required'
             placeholder='Enter a search value...'></input>
           <button type='submit'>Search</button>
-          <button type='button' onClick={resetForm}>Clear</button>
+          <button type='button' onClick={resetSearch}>Clear</button>
         </div>
       </form>
       <button type='uploadButton' onClick={() => handleOpenWidget()}>Upload</button>
       <div className='image-grid'>
         {imageList.map((image) => (
           <div className='image-preview'>
-            <input type="text" className="input" onChange={handleText} value={image.public_id} />
+            <input type="text" data-testid="image" className="input" onChange={handleImageID} value={image.public_id} />
             <img src={image.url} alt={image.public_id}></img>
           </div>
         ))}
       </div>
       <div className='footer'>
-        {nextCursor && <button onClick={handleLoadMoreButtonClick}>Load More</button>}
+        {nextCursor && <button onClick={handleLoadMore}>Load More</button>}
       </div>
     </>
   );

@@ -35,7 +35,12 @@ function App({ signOut, user }) {
         cropping: false,
         multiple: true,
         defaultSource: "local",
-      });
+      },
+      (error,  result) => {
+        if (!error && result && result.event === "success"){
+          setImageList((prev)=>[...prev, {result: result.info.url, public_id: result.info.public_id}])
+          resetSearch();
+        }});
     myWidget.open();
   }
 

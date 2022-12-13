@@ -1,10 +1,18 @@
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
-import { render, screen, cleanup } from '@testing-library/react';
 import React, { useState } from "react";
 import '@testing-library/jest-dom';
 import { Button } from '@aws-amplify/ui-react';
 import { getImages, searchImages } from './api';
 
+//handleOpenWidget
+
+//handleImageID
+
+//handleLoadMore
+
+//handleSearch
+
+//resetSearch
 
 test('start',() => {
     console.log("Test is working");
@@ -43,3 +51,38 @@ it ('should return result with relevant query', ()=>{
         expect(data.total_count).toBe(1);
     })  
 })
+
+it('GivenUserWhenClickSignOutButtonThenApplicationSignOut', () => {
+    render(<App />);
+    const signOut = screen.getByText('');
+    fireEvent.click(signOut);
+    expect(signOutSpy).toHaveBeenCalled();
+})
+
+describe(App, () => {
+    it("upload button", async () => {
+        const {getByRole} = render(<App />); 
+        const uploadButton = getByRole('uploadButton', { name: 'Upload'});
+        fireEvent.click(uploadButton);
+        expect(handleOpenWidget).toHaveBeenCalled();
+    });
+});
+
+describe(App, () => {
+    it("sign out button", async () => {
+        const {getByRole} = render(<App />); 
+        const signOutBttn = getByRole('button', { name: 'SignOut'});
+        fireEvent.click(signOutBttn);
+        expect(signOut).toHaveBeenCalled();
+    });
+});
+
+describe(App, () => {
+    it("Click more button", async () => {
+        const {getByRole} = render(<App />); 
+        const moreBttn = getByRole('button', { name: 'Load More'});
+        fireEvent.click(moreBttn);
+        expect(handleLoadMoreButtonClick).toHaveBeenCalled();
+    });
+});
+
